@@ -1,0 +1,8 @@
+# The servers file of this installation: addresses and rules, written by the operator.
+mcp_servers.yaml
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/

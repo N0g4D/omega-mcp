@@ -1,0 +1,57 @@
+# The MCP servers an Omega agent may use, and what it may do with each.
+#
+# Copy this file to mcp_servers.yaml in the same folder (or anywhere, and set
+# mcpConfigPath) and edit it. The LLM has no way to add a server or to change
+# a rule: it only ever sees the names and descriptions written here.
+#
+# ${NAME} is replaced with the environment variable NAME of the Omega process,
+# so that tokens stay out of this file. A server whose variable is not set is
+# listed as unavailable. Whatever ${NAME} put in is taken out again of every
+# text that goes to the agent or to the log.
+#
+# Rules, under "tools" (all optional):
+#   allow        the tools the agent sees, as name patterns (default: all)
+#   deny         tools it never sees, whatever allow says
+#   writes       deny (default) or allow: what to do with tools that the
+#                server does not mark as read-only
+#   allow_write  tools that may run although writes is deny
+
+servers:
+
+  # A server on this machine: the plugin starts it and talks to it over stdio.
+  # This one comes with the plugin, for a first try: notes kept in memory.
+  demo:
+    transport: stdio
+    command: python3
+    args: ["tests/fixtures/demo_server.py"]
+    cwd: .                          # a relative cwd starts from this file's folder
+    description: Demo notes server  # the LLM reads this in its list of servers
+    tools:
+      deny: ["crash", "slow", "big", "fail"]   # test helpers of the demo server
+      allow_write: ["create_note"]
+
+  # The reference filesystem server, held to one folder. Needs Node (npx).
+  files:
+    enabled: false
+    transport: stdio
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/a/folder"]
+    description: Files under /path/to/a/folder
+    connect_timeout: 120            # seconds; the first start downloads the server
+    # A stdio server does not get Omega's environment, only HOME, PATH and a
+    # few more. What else it needs is named here, for example a proxy:
+    # env: {HTTPS_PROXY: "${HTTPS_PROXY}"}
+
+  # A remote server over streamable HTTP, with a token from the environment.
+  remote:
+    enabled: false
+    transport: http
+    url: https://mcp.example.com/mcp
+    headers: {Authorization: "Bearer ${EXAMPLE_MCP_TOKEN}"}
+    description: What this server is for
+    timeout: 60                     # seconds for one call (default 60)
+    tools:
+      allow: ["search_*", "get_*"]
+      deny: ["get_secret"]
+      writes: deny
+      allow_write: []
