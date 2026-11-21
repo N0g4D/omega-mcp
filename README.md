@@ -303,17 +303,18 @@ python3 tests/e2e/run_e2e.py /path/to/PeTTa --core-plugins-file   # v0.1.24
 `--security-policy FILE` runs under an Omega filesystem policy. The top of
 the script says the rest.
 
-What was run for this version, all on Linux:
+What was run for this version:
 
 | | |
 |---|---|
-| Unit tests | Python 3.10 and 3.13, each with MCP SDK 1.30.0 and 2.3.0 |
-| In Omega | `main` at `d35bfbf` (20 November 2026) and `v0.1.24`, on PeTTa v1.0.4, SWI-Prolog 10.1.20, Python 3.13 and MCP SDK 2.3.0, with and without a filesystem policy |
-| Servers | The three of `tests/fixtures`, and `@modelcontextprotocol/server-filesystem` 1.0.0 (Node 22) and 2.4.0 (Node 24) |
+| Unit tests | On Linux: Python 3.10 and 3.13, each with MCP SDK 1.30.0 and 2.3.0. On macOS 27.2.1: Python 3.12.16 with MCP SDK 2.3.0 |
+| In Omega | On Linux: `main` at `d35bfbf` (20 November 2026) and `v0.1.24`, on PeTTa v1.0.4, SWI-Prolog 10.1.20, Python 3.13 and MCP SDK 2.3.0, with and without a filesystem policy |
+| Servers | The three of `tests/fixtures`, and in the Omega runs `@modelcontextprotocol/server-filesystem` 1.0.0 (Node 22) and 2.4.0 (Node 24) |
 
-Not run: Docker, macOS and Windows, a hosted MCP server of any vendor, and a
-real LLM. The model in these runs is a script, so how well a given model
-writes the calls is not measured here.
+Not run: Docker, Windows, Omega itself on macOS (only the unit tests ran
+there), a hosted MCP server of any vendor, and a real LLM. The model in these
+runs is a script, so how well a given model writes the calls is not measured
+here.
 
 ## License
 
